@@ -4,6 +4,7 @@ import 'package:littlebusiness/logic/Category.dart';
 import '../elements/menu_button.dart';
 import 'package:hive/hive.dart';
 import 'package:littlebusiness/logic/Item.dart';
+import 'package:littlebusiness/DAO.dart';
 
 class CategoriesPage extends StatefulWidget {
   CategoriesPage({Key key, this.title}) : super(key: key);
@@ -13,7 +14,8 @@ class CategoriesPage extends StatefulWidget {
   _CategoriesPageState createState() => _CategoriesPageState();
 }
 
-class _CategoriesPageState extends State<CategoriesPage> {
+class _CategoriesPageState extends State<CategoriesPage>
+    with SingleTickerProviderStateMixin {
   int _counter = 0;
   int _indexTab = 0;
 
@@ -23,13 +25,32 @@ class _CategoriesPageState extends State<CategoriesPage> {
     });
   }
 
-//  final categoriesBox = Hive.openBox('categories');
+  // final categoriesBox = Hive.openBox<Category>('categories');
+
+  var colT1 = 0;
+  var asT1 = true;
+  var colT2 = 0;
+  var asT2 = true;
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: 2);
+  }
+
+  var categories = getListCategories();
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-//      future: Hive.openBox('items'), We already opened in the beginning so it in loaded in memory
-      future: Hive.openBox<Item>('items'),
+      future: Hive.openBox<Category>('categories'),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
@@ -73,19 +94,56 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 body: TabBarView(
                   children: [
                     DataTable(
+                      sortColumnIndex: colT1,
+                      sortAscending: asT1,
                       columns: [
-                        DataColumn(label: Text('Name')),
+                        DataColumn(
+                          label: Text('Name'),
+                          onSort: (index, bool) {},
+                        ),
                         DataColumn(label: Text('Category')),
                         DataColumn(label: Text('Quantity')),
                       ],
-                      rows: getListItems(),
+                      rows: getListItemsTable(),
                     ),
                     DataTable(
+                      sortColumnIndex: colT2,
+                      sortAscending: asT2,
                       columns: [
-                        DataColumn(label: Text('Name')),
-                        DataColumn(label: Text('Color')),
+                        DataColumn(
+                          label: Text('Name'),
+                          onSort: (index, bool) {
+                            setState(() {
+                              colT2 = index;
+                              asT2 = bool;
+                              if (!bool) {
+                                categories.sort((a, b) =>
+                                    a.getName().compareTo(b.getName()));
+                              } else {
+                                categories.sort((a, b) =>
+                                    b.getName().compareTo(a.getName()));
+                              }
+                            });
+                          },
+                        ),
+                        DataColumn(
+                          label: Text('Color'),
+                          onSort: (index, bool) {
+                            setState(() {
+                              colT2 = index;
+                              asT2 = bool;
+                              if (!bool) {
+                                categories.sort((a, b) =>
+                                    a.getColor().compareTo(b.getColor()));
+                              } else {
+                                categories.sort((a, b) =>
+                                    b.getColor().compareTo(a.getColor()));
+                              }
+                            });
+                          },
+                        ),
                       ],
-                      rows: getListCategories(),
+                      rows: getListCategoriesTable(),
                     )
                   ],
                 ),
@@ -103,30 +161,42 @@ class _CategoriesPageState extends State<CategoriesPage> {
     );
   }
 
-  List<DataRow> getListCategories() {
-    final categoriesBox = Hive.box<Category>('categories');
+  onSortColum(int columnIndex, bool ascending) {
+    var cat = getListCategories();
+    if (columnIndex == 0) {
+      if (ascending) {
+        cat.sort((a, b) => a.toString().compareTo(b.toString()));
+      } else {
+        cat.sort((a, b) => b.toString().compareTo(a.toString()));
+      }
+    }
+  }
+
+  List<DataRow> getListCategoriesTable() {
     List<DataRow> list = new List<DataRow>();
-    Category cat;
-    for (var i = 0; i < categoriesBox.length; i++) {
-      cat = categoriesBox.get(i) as Category;
+    for (var i = 0; i < categories.length; i++) {
       list.add(DataRow(cells: [
-        DataCell(Text(cat.getName())),
-        DataCell(Text(cat.getColor().toString()))
+        DataCell(Text(categories[i].getName())),
+        DataCell(
+          Text(categories[i].getColor().toString()),
+          showEditIcon: true,
+        )
       ]));
     }
     return list;
   }
 
-  List<DataRow> getListItems() {
-    final itemsBox = Hive.box<Item>('items');
+  List<DataRow> getListItemsTable() {
+    var items = getListItems();
     List<DataRow> list = new List<DataRow>();
-    Item item;
-    for (var i = 0; i < itemsBox.length; i++) {
-      item = itemsBox.get(i) as Item;
+    for (var i = 0; i < items.length; i++) {
       list.add(DataRow(cells: [
-        DataCell(Text(item.getName())),
-        DataCell(Text(item.getName())),
-        DataCell(Text(item.getQuantity().toString())),
+        DataCell(Text(items[i].getName())),
+        DataCell(Text(items[i].getName())),
+        DataCell(
+          Text(items[i].getQuantity().toString()),
+          showEditIcon: true,
+        ),
       ]));
     }
     return list;

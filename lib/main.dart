@@ -19,17 +19,8 @@ void main() async {
 
   runApp(MyApp());
   // We open the box here and It can be accessed by any screen
-//  await Hive.openBox('items');
   await Hive.openBox<Category>('categories');
   await Hive.openBox<Item>('items');
-//  var itemsBox = Hive.box<Item>('items');
-//  var cat = Hive.box<Category>('categories');
-//
-//  print(object)
-//  itemsBox.clear();
-//  cat.clear();
-
-//  final itemBox = await Hive.openBox('categories');
 }
 
 class MyApp extends StatefulWidget {

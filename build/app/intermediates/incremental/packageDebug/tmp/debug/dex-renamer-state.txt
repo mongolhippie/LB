@@ -1,4 +1,4 @@
-#Sun Apr 26 14:09:26 CEST 2020
-base.0=/Users/kikedojranovski/AndroidStudioProjects/little_business/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
+#Sun May 03 23:08:28 CEST 2020
+base.0=/Users/Kike/AndroidStudioProjects/LB/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

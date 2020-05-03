@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:littlebusiness/logic/Category.dart';
 import 'package:littlebusiness/DAO.dart';
 import '../elements/alerts.dart';
+import '../elements/ext.dart';
 
 class FormCategoryPage extends StatefulWidget {
   @override
@@ -48,7 +49,7 @@ class _FormCategoryPageState extends State<FormCategoryPage> {
                     decoration: const InputDecoration(
                       labelText: 'Name',
                     ),
-                    onSaved: (value) => _name = value,
+                    onSaved: (value) => _name = value.capitalize(),
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Please enter some text';
