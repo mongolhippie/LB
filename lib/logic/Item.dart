@@ -12,7 +12,7 @@ class Item extends HiveObject {
   @HiveField(1)
   String _name;
   @HiveField(2)
-  Category _category;
+  String _categoryID;
   @HiveField(3)
   units _unit;
   @HiveField(4)
@@ -21,8 +21,10 @@ class Item extends HiveObject {
   double _cost;
   @HiveField(6)
   double _quantity;
+  @HiveField(7)
+  String _photo;
 
-  Item(this._name, this._category, this._unit, this._price, this._cost,
+  Item(this._name, this._categoryID, this._unit, this._price, this._cost,
       this._quantity);
 
   String getID() => _ID;
@@ -32,13 +34,13 @@ class Item extends HiveObject {
     _name = newName;
   }
 
-  Category getCategory() => _category;
-  void changeCategory(Category newCategory) {
-    _category = newCategory;
+  String getCategory() => _categoryID;
+  void changeCategory(String newCategory) {
+    _categoryID = newCategory;
   }
 
-  units getSoldBy() => _unit;
-  void changeSoldBy(units newSoldBy) {
+  units getUnit() => _unit;
+  void changeUnit(units newSoldBy) {
     _unit = newSoldBy;
   }
 
@@ -55,5 +57,10 @@ class Item extends HiveObject {
   double getQuantity() => _quantity;
   void changeQuantity(double newQuantity) {
     _quantity = newQuantity;
+  }
+
+  String getPhoto() => _photo;
+  void changePhoto(String newPhoto) {
+    _photo = newPhoto;
   }
 }

@@ -16,6 +16,12 @@ bool addCategory(Category newCat) {
   return true;
 }
 
+void editCategory(Category newCat) {
+//  final itemBox = await Hive.openBox<Category>('categories');
+  var categoriesBox = Hive.box<Category>('categories');
+  categoriesBox.put(newCat.getID().toString(), newCat);
+}
+
 List<Category> getListCategories() {
   final categoriesBox = Hive.box<Category>('categories');
   List<Category> list = new List<Category>();
@@ -23,6 +29,11 @@ List<Category> getListCategories() {
     list.add(categoriesBox.getAt(i));
   }
   return list;
+}
+
+Category getCategoryByID(String id) {
+  final categoriesBox = Hive.box<Category>('categories');
+  return categoriesBox.get(id);
 }
 
 bool addItem(Item newItem) {
@@ -35,6 +46,11 @@ bool addItem(Item newItem) {
   }
   itemsBox.put(newItem.getID(), newItem);
   return true;
+}
+
+Item getItemByID(String id) {
+  final itemsBox = Hive.box<Item>('items');
+  return itemsBox.get(id);
 }
 
 List<Item> getListItems() {

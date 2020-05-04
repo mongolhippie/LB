@@ -3,6 +3,8 @@ import 'package:littlebusiness/logic/Category.dart';
 import 'package:littlebusiness/DAO.dart';
 import '../elements/alerts.dart';
 import '../elements/ext.dart';
+import '../elements/radio_color.dart';
+import '../constants.dart';
 
 class FormCategoryPage extends StatefulWidget {
   @override
@@ -16,24 +18,21 @@ class _FormCategoryPageState extends State<FormCategoryPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    sampleData.add(new RadioModel(true, 'Red', 0xffe6194B));
-    sampleData.add(new RadioModel(false, 'Orange', 0xfff58231));
-    sampleData.add(new RadioModel(false, 'Yellow', 0xffffe119));
-    sampleData.add(new RadioModel(false, 'Green', 0xffbfef45));
-    sampleData.add(new RadioModel(false, 'Blue', 0xff3595F4));
-    sampleData.add(new RadioModel(false, 'Purple', 0xff9929B1));
+    checkboxes = ListColor().getColorCheckboxesList(0xffe6194B);
   }
 
-  List<RadioModel> sampleData = new List<RadioModel>();
-
   String _name;
-  int _color = 0xffe6194B;
+  int _color;
+  List<RadioModel> checkboxes;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Category'),
+        title: Text(
+          'New Category',
+          style: TextStyle(fontFamily: 'Comfortaa'),
+        ),
       ),
       body: Center(
         child: Form(
@@ -47,6 +46,7 @@ class _FormCategoryPageState extends State<FormCategoryPage> {
                   margin: EdgeInsets.symmetric(vertical: 20, horizontal: 5),
                   child: TextFormField(
                     decoration: const InputDecoration(
+                      labelStyle: TextStyle(fontFamily: 'Comfortaa'),
                       labelText: 'Name',
                     ),
                     onSaved: (value) => _name = value.capitalize(),
@@ -69,19 +69,19 @@ class _FormCategoryPageState extends State<FormCategoryPage> {
                       width: MediaQuery.of(context).size.width - 32,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: sampleData.length,
+                        itemCount: checkboxes.length,
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
-                            splashColor: Color(sampleData[index].colorCode),
+                            splashColor: Color(checkboxes[index].colorCode),
                             onTap: () {
                               setState(() {
-                                sampleData.forEach(
+                                checkboxes.forEach(
                                     (element) => element.isSelected = false);
-                                sampleData[index].isSelected = true;
-                                _color = sampleData[index].colorCode;
+                                checkboxes[index].isSelected = true;
+                                _color = checkboxes[index].colorCode;
                               });
                             },
-                            child: RadioColorItem(sampleData[index]),
+                            child: RadioColorItem(checkboxes[index]),
                           );
                         },
                       ),
@@ -91,15 +91,19 @@ class _FormCategoryPageState extends State<FormCategoryPage> {
                 RaisedButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.red)),
-                  child: Text('Add New Category'),
-                  color: Colors.teal,
-                  textColor: Colors.white,
+                      side: BorderSide(color: kBorderGreen)),
+                  child: Text(
+                    'Add New Category',
+                    style:
+                        TextStyle(fontFamily: 'Comfortaa', color: Colors.white),
+                  ),
+                  color: kFillGreen,
                   onPressed: () {
-                    _formKey.currentState.save();
                     if (_formKey.currentState.validate()) {
+                      _formKey.currentState.save();
                       if (addCategory(Category(_name, _color))) {
-                        Navigator.pop(context, 1);
+                        //       Navigator.pop(context, 1);
+                        Navigator.pushReplacementNamed(context, '/categories');
                       } else {
                         showOneButtonDialog(context, 'Name repeated!',
                             'There is already a Category with this name');
@@ -114,50 +118,4 @@ class _FormCategoryPageState extends State<FormCategoryPage> {
       ),
     );
   }
-}
-
-class RadioColorItem extends StatelessWidget {
-  final RadioModel _item;
-  RadioColorItem(this._item);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(15.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Container(
-            height: 35.0,
-            width: 35.0,
-            alignment: Alignment.center,
-            child: Container(
-                height: 25.0,
-                width: 25.0,
-                decoration: BoxDecoration(
-                  color: Color(_item.colorCode),
-                  borderRadius:
-                      const BorderRadius.all(const Radius.circular(15)),
-                )),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              border: Border.all(
-                  width: 3.0,
-                  color: _item.isSelected
-                      ? Color(_item.colorCode)
-                      : Colors.transparent),
-              borderRadius: const BorderRadius.all(const Radius.circular(25)),
-            ),
-          ),
-          Container(margin: EdgeInsets.only(left: 20.0))
-        ],
-      ),
-    );
-  }
-}
-
-class RadioModel {
-  bool isSelected;
-  final String buttonText;
-  final int colorCode;
-  RadioModel(this.isSelected, this.buttonText, this.colorCode);
 }

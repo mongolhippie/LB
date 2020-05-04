@@ -15,7 +15,7 @@ class ItemAdapter extends TypeAdapter<Item> {
     };
     return Item(
       fields[1] as String,
-      fields[2] as Category,
+      fields[2] as String,
       fields[3] as units,
       fields[4] as double,
       fields[5] as double,
@@ -32,7 +32,7 @@ class ItemAdapter extends TypeAdapter<Item> {
       ..writeByte(1)
       ..write(obj._name)
       ..writeByte(2)
-      ..write(obj._category)
+      ..write(obj._categoryID)
       ..writeByte(3)
       ..write(obj._unit)
       ..writeByte(4)

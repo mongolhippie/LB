@@ -29,7 +29,6 @@ class MenuButton extends StatelessWidget {
       ],
       ringDiameter: 230,
       ringWidth: 90,
-      animationCurve: Cubic(1, 1.65, .62, .83),
     );
   }
 
