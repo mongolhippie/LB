@@ -12,6 +12,8 @@ import 'screens/edit_item.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'constants.dart';
+import 'elements/ext.dart';
+import 'dart:io';
 
 void main() async {
 //  Hive.deleteFromDisk();
@@ -21,11 +23,12 @@ void main() async {
   pathAPP = appDocumentDir.path;
   Hive.registerAdapter(CategoryAdapter());
   Hive.registerAdapter(ItemAdapter());
-
-  runApp(MyApp());
-  // We open the box here and It can be accessed by any screen
   await Hive.openBox<Category>('categories');
   await Hive.openBox<Item>('items');
+
+  await AppUtil.createFolderInAppDir('items');
+  runApp(MyApp());
+  // We open the box here and It can be accessed by any screen
 }
 
 class MyApp extends StatefulWidget {

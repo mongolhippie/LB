@@ -241,46 +241,49 @@ class _FormItemPageState extends State<FormItemPage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: AwesomeButton(
-                            height: 40,
-                            blurRadius: 10.0,
-                            splashColor: Color.fromRGBO(255, 255, 255, .4),
-                            borderRadius: BorderRadius.circular(37.5),
-                            onTap: () => _pickImage(ImageSource.camera),
-                            color: Colors.white,
-                            child: Text(
-                              "Camera",
-                              style: TextStyle(
-                                fontFamily: 'Comfortaa',
-                                color: kBorderGreen,
-                                fontSize: 20.0,
+                    Visibility(
+                      visible: _imageFile == null ? true : false,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: AwesomeButton(
+                              height: 40,
+                              blurRadius: 10.0,
+                              splashColor: Color.fromRGBO(255, 255, 255, .4),
+                              borderRadius: BorderRadius.circular(37.5),
+                              onTap: () => _pickImage(ImageSource.camera),
+                              color: Colors.white,
+                              child: Text(
+                                "Camera",
+                                style: TextStyle(
+                                  fontFamily: 'Comfortaa',
+                                  color: kBorderGreen,
+                                  fontSize: 20.0,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 20),
-                        Expanded(
-                          child: AwesomeButton(
-                            height: 40,
-                            blurRadius: 10.0,
-                            splashColor: Color.fromRGBO(255, 255, 255, .4),
-                            borderRadius: BorderRadius.circular(37.5),
-                            onTap: () => _pickImage(ImageSource.gallery),
-                            color: Colors.white,
-                            child: Text(
-                              "Gallery",
-                              style: TextStyle(
-                                fontFamily: 'Comfortaa',
-                                color: kBorderGreen,
-                                fontSize: 20.0,
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: AwesomeButton(
+                              height: 40,
+                              blurRadius: 10.0,
+                              splashColor: Color.fromRGBO(255, 255, 255, .4),
+                              borderRadius: BorderRadius.circular(37.5),
+                              onTap: () => _pickImage(ImageSource.gallery),
+                              color: Colors.white,
+                              child: Text(
+                                "Gallery",
+                                style: TextStyle(
+                                  fontFamily: 'Comfortaa',
+                                  color: kBorderGreen,
+                                  fontSize: 20.0,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     SizedBox(height: 20),
                     RaisedButton(
@@ -304,9 +307,11 @@ class _FormItemPageState extends State<FormItemPage> {
                                 "You should select a Category for the Item");
                           }
                           // copy the file to a new path
-                          if (addItem(Item(_name, _category, _unit, _price,
-                              _cost, _unitAvailable))) {
-                            _imageFile.copy('$pathAPP/items/$_name');
+                          if (addItem(Item(_name, _category, _unit.toString(),
+                              _price, _cost, _unitAvailable))) {
+                            var nameTrim = _name.trim().replaceAll(' ', '');
+                            AppUtil.createFolderInAppDir('items');
+                            _imageFile.copy('$pathAPP/items/$nameTrim.jpg');
                             Navigator.pop(context, 1);
                           } else {
                             showOneButtonDialog(context, 'Name repeated!',

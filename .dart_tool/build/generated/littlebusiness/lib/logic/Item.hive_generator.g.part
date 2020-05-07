@@ -12,17 +12,19 @@ class ItemAdapter extends TypeAdapter<Item> {
     return Item(
       fields[1] as String,
       fields[2] as String,
-      fields[3] as units,
+      fields[3] as String,
       fields[4] as double,
       fields[5] as double,
       fields[6] as double,
-    ).._ID = fields[0] as String;
+    )
+      .._ID = fields[0] as String
+      .._photo = fields[7] as String;
   }
 
   @override
   void write(BinaryWriter writer, Item obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj._ID)
       ..writeByte(1)
@@ -36,6 +38,8 @@ class ItemAdapter extends TypeAdapter<Item> {
       ..writeByte(5)
       ..write(obj._cost)
       ..writeByte(6)
-      ..write(obj._quantity);
+      ..write(obj._quantity)
+      ..writeByte(7)
+      ..write(obj._photo);
   }
 }

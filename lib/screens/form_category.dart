@@ -22,7 +22,7 @@ class _FormCategoryPageState extends State<FormCategoryPage> {
   }
 
   String _name;
-  int _color;
+  int _color = 0xffe6194B;
   List<RadioModel> checkboxes;
 
   @override

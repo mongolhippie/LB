@@ -19,14 +19,7 @@ class CategoriesPage extends StatefulWidget {
 
 class _CategoriesPageState extends State<CategoriesPage>
     with SingleTickerProviderStateMixin {
-  int _counter = 0;
   int _indexTab = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   // final categoriesBox = Hive.openBox<Category>('categories');
 
@@ -235,7 +228,7 @@ class _CategoriesPageState extends State<CategoriesPage>
   }
 
   List<DataRow> getListCategoriesTable() {
-    List<DataRow> list = new List<DataRow>();
+    List<DataRow> list = List<DataRow>();
     for (var i = 0; i < categories.length; i++) {
       list.add(DataRow(cells: [
         DataCell(Text(

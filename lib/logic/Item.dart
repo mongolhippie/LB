@@ -14,7 +14,7 @@ class Item extends HiveObject {
   @HiveField(2)
   String _categoryID;
   @HiveField(3)
-  units _unit;
+  String _unit;
   @HiveField(4)
   double _price;
   @HiveField(5)
@@ -39,8 +39,8 @@ class Item extends HiveObject {
     _categoryID = newCategory;
   }
 
-  units getUnit() => _unit;
-  void changeUnit(units newSoldBy) {
+  String getUnit() => _unit;
+  void changeUnit(String newSoldBy) {
     _unit = newSoldBy;
   }
 
