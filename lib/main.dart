@@ -3,6 +3,7 @@ import 'package:littlebusiness/screens/edit_category.dart';
 import 'screens/sales.dart';
 import 'screens/performance.dart';
 import 'screens/categories.dart';
+import 'screens/change.dart';
 import 'screens/form_category.dart';
 import 'screens/edit_category.dart';
 import 'logic/Category.dart';
@@ -52,6 +53,7 @@ class _MyAppState extends State<MyApp> {
         '/itemform': (context) => FormItemPage(),
         '/editcategory': (context) => FormEditCategoryPage(),
         '/edititem': (context) => FormEditItemPage(),
+        '/change': (context) => CalculatorPage(),
       },
     );
   }

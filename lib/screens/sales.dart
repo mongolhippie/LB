@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:littlebusiness/constants.dart';
-import 'package:littlebusiness/logic/Accout.dart';
 import 'package:littlebusiness/logic/Category.dart';
 import 'package:littlebusiness/logic/Item.dart';
 import 'package:littlebusiness/DAO.dart';
@@ -8,6 +7,8 @@ import 'package:hive/hive.dart';
 import '../elements/menu_button.dart';
 import 'package:build_daemon/constants.dart';
 import '../elements/ext.dart';
+import 'change.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SalesPage extends StatefulWidget {
   SalesPage({Key key, this.title}) : super(key: key);
@@ -20,14 +21,13 @@ class _SalesPageState extends State<SalesPage> {
   List<Category> categories;
   List<Item> items;
 
-  var account = List<Widget>();
   var itemsSelected = List<Item>();
 
   @override
   void initState() {
     super.initState();
     categories = getListCategories();
-    items = getListItems();
+    items = getListItems()..sort((a, b) => a.getName().compareTo(b.getName()));
   }
 
   @override
@@ -49,8 +49,8 @@ class _SalesPageState extends State<SalesPage> {
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
                   childAspectRatio: .85, // space between rows in the grid
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 7.0,
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 3,
                   crossAxisSpacing: 0,
                   // children: account,
                   children: getItemBought(unifyList(itemsSelected)),
@@ -75,18 +75,28 @@ class _SalesPageState extends State<SalesPage> {
   }
 
   List<Widget> getItemBought(List<ItemShopModel> list) {
-    print('This is shop model');
-    print(list);
     var sol = List<Widget>();
     Category cat;
     for (var i = 0; i < list.length; i++) {
       cat = getCategoryByID(list[i].getItem().getCategory());
-      print('This is quantity');
-      print(list[i].getQuantity());
       sol.add(itemsShop(list[i].getItem(), cat, list[i].getQuantity()));
     }
-    print('and this is sol');
-    print(sol);
+    sol.add(
+      IconButton(
+          icon: SvgPicture.asset(
+            'svg/calc.svg',
+            semanticsLabel: 'Calculator',
+            width: 100,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CalculatorPage(items: itemsSelected),
+              ),
+            );
+          }),
+    );
     return sol;
   }
 
@@ -106,17 +116,12 @@ class _SalesPageState extends State<SalesPage> {
         splashColor: Color(cat.getColor()),
         onTap: () {
           setState(() {
-            print('Tapped!');
-            print('lista antes: ');
-            print(itemsSelected);
-            print('item: ');
-            print(item.getName());
-            itemsSelected = List.from(itemsSelected..add(item));
-            print('lista despues: ');
-            print(itemsSelected);
-
-            print('account: ');
-            print(account);
+            if (price < 0) {
+              itemsSelected = List.from(itemsSelected..add(item))
+                ..sort((a, b) => a.getName().compareTo(b.getName()));
+            } else {
+              itemsSelected = List.from(itemsSelected..remove(item));
+            }
           });
         },
         child: itemShop(item, cat, price),
@@ -130,8 +135,8 @@ class _SalesPageState extends State<SalesPage> {
       children: <Widget>[
         Container(
           //    margin: EdgeInsets.only(top: 15),
-          height: 101,
-          width: 81,
+          height: price <= 0 ? 101 : 131,
+          width: price <= 0 ? 81 : 121,
           decoration: BoxDecoration(
             color: Color(cat.getColor()),
             boxShadow: [
@@ -146,8 +151,7 @@ class _SalesPageState extends State<SalesPage> {
           child: Column(
             children: <Widget>[
               Container(
-                height: 80,
-                width: 81,
+                height: price <= 0 ? 80 : 90,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(item.getName()),
@@ -161,7 +165,7 @@ class _SalesPageState extends State<SalesPage> {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     height: 25.00,
-                    width: 82.00,
+                    width: double.infinity,
                     color: Color(0x99000000),
                     child: Padding(
                       padding: EdgeInsets.only(left: 5),
@@ -178,14 +182,14 @@ class _SalesPageState extends State<SalesPage> {
                 ),
               ),
               SizedBox(
-                height: 3,
+                height: price <= 0 ? 3 : 8,
               ),
               Text(
                 price <= 0 ? item.getPrice().toString() : price.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: "Comfortaa",
-                  fontSize: 16,
+                  fontSize: price <= 0 ? 16 : 24,
                   color: Color(0xffffffff),
                 ),
               )

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:littlebusiness/logic/Item.dart';
-import 'package:littlebusiness/logic/Accout.dart';
 
 extension StringExtension on String {
   String capitalize() {
@@ -72,4 +71,15 @@ List<ItemShopModel> unifyList(List<Item> listItems) {
   print(sol);
 
   return sol;
+}
+
+class ItemShopModel {
+  final Item _item;
+  int _quantity;
+  ItemShopModel(this._item, this._quantity);
+
+  Item getItem() => _item;
+  int getQuantity() => _quantity;
+
+  void addOne() => _quantity++;
 }
