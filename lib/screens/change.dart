@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:littlebusiness/logic/Item.dart';
 import '../elements/ext.dart';
 import 'package:build_daemon/constants.dart';
+import '../elements/table.dart';
 
 class CalculatorPage extends StatefulWidget {
   CalculatorPage({Key key, this.items}) : super(key: key);
@@ -159,6 +160,20 @@ class _CalculatorPageState extends State<CalculatorPage> {
         ],
       ),
     );
+  }
+
+  void quantityPressed(int indexCol, bool ascending) {
+    setState(() {
+      setState(() {
+        colTable = indexCol;
+        asTable = ascending;
+        if (ascending) {
+          items.sort((a, b) => a.getQuantity().compareTo(b.getQuantity()));
+        } else {
+          items.sort((a, b) => b.getQuantity().compareTo(a.getQuantity()));
+        }
+      });
+    });
   }
 
   List<DataRow> getListItemsAccount() {
