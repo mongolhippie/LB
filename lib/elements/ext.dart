@@ -33,53 +33,44 @@ class AppUtil {
 List<ItemShopModel> unifyList(List<Item> listItems) {
   List<Item> prov;
   prov = List.from(listItems);
-  print('This is the list at the begining: ');
-  print(listItems);
   var sol = List<ItemShopModel>();
   ItemShopModel itemModel;
   var instances = 1;
 
   for (int i = 0; i < prov.length; i++) {
     Item item = prov[i];
-
-    print('Vualta numero i: ');
-    print(i);
     var appear = false;
     for (int j = 0; j < sol.length; j++) {
-      print('Vualta numero j: ');
-      print(j);
       if (sol[j].getItem() == prov[i]) {
-        print('--49--');
         appear = true;
         sol[j].addOne();
       }
     }
     if (!appear) {
-      print('--56--');
       sol.add(ItemShopModel(item, instances));
     }
     instances = 1;
   }
-  print('This is listItems at the END: ');
-  print(listItems);
-  print('This is sol at the end: ');
   for (int i = 0; i < prov.length; i++) {
     print(prov[i].getName());
   }
-
-  print('This is sol at the END: ');
-  print(sol);
-
   return sol;
 }
 
 class ItemShopModel {
   final Item _item;
   int _quantity;
-  ItemShopModel(this._item, this._quantity);
+  double _finalPrice;
+  ItemShopModel(this._item, this._quantity) {
+    _finalPrice = _item.getPrice() * _quantity;
+  }
 
   Item getItem() => _item;
   int getQuantity() => _quantity;
+  double getFinalPrice() => _finalPrice;
 
-  void addOne() => _quantity++;
+  void addOne() {
+    _quantity++;
+    _finalPrice = _item.getPrice() * _quantity;
+  }
 }

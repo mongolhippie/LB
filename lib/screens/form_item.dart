@@ -130,6 +130,7 @@ class _FormItemPageState extends State<FormItemPage> {
                         style: TextStyle(fontFamily: 'Comfortaa'),
                         child: Center(
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -204,36 +205,41 @@ class _FormItemPageState extends State<FormItemPage> {
                                   ),
                                 ],
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: TextFormField(
-                                      keyboardType:
-                                          TextInputType.numberWithOptions(
-                                              decimal: true),
-                                      inputFormatters: [
-                                        WhitelistingTextInputFormatter
-                                            .digitsOnly
-                                      ],
-                                      decoration: const InputDecoration(
-                                        labelText: 'Units available',
+                              Container(
+                                height: 40,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Flexible(
+                                      child: TextFormField(
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                decimal: true),
+                                        inputFormatters: [
+                                          WhitelistingTextInputFormatter
+                                              .digitsOnly
+                                        ],
+                                        decoration: const InputDecoration(
+                                          labelText: 'Units available',
+                                        ),
+                                        onSaved: (value) => _unitAvailable =
+                                            double.parse(value),
+                                        validator: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Please enter some text';
+                                          }
+                                          return null;
+                                        },
                                       ),
-                                      onSaved: (value) =>
-                                          _unitAvailable = double.parse(value),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Please enter some text';
-                                        }
-                                        return null;
-                                      },
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Platform.isIOS
-                                        ? iOSPicker()
-                                        : androidDropdown(),
-                                  ),
-                                ],
+                                    Flexible(
+                                      child: Platform.isIOS
+                                          // Here is code that gives the error
+                                          ? iOSPicker()
+                                          : androidDropdown(),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -373,7 +379,8 @@ class _FormItemPageState extends State<FormItemPage> {
       pickerItems.add(Text(categories[i].getName()));
     }
     return CupertinoPicker(
-      backgroundColor: Colors.lightBlue,
+      backgroundColor: Colors.white,
+      useMagnifier: true,
       itemExtent: 32.0,
       onSelectedItemChanged: (selectedIndex) {
         setState(() {

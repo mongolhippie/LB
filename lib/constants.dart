@@ -12,3 +12,25 @@ Color kBorderBlue = const Color(0xFF00BCD4);
 Color kFillBlue = const Color(0xFF76D0DB);
 
 String pathAPP;
+
+class Currency {
+  String continent;
+  String nameCountry;
+  String nameCurrency;
+  String abbreviationCurrency;
+  List<int> coins;
+  List<int> bills;
+
+  Currency(this.abbreviationCurrency, this.coins, this.bills, this.continent,
+      this.nameCountry, this.nameCurrency);
+}
+
+Currency getEurope() {
+  return Currency('EUR', [1, 2, 5, 10, 20, 50, 100, 200],
+      [5, 10, 20, 50, 100, 200], 'Europe', 'Europe', 'Euro');
+}
+
+Currency getKenya() {
+  return Currency('SHS', [1, 5, 10, 20, 40], [50, 100, 200, 500, 1000, 2000],
+      'Africa', 'Kenya', 'Shilling');
+}

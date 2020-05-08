@@ -22,6 +22,14 @@ class _SalesPageState extends State<SalesPage> {
   List<Item> items;
 
   var itemsSelected = List<Item>();
+  var total = 0.0;
+
+  void updatePrice() {
+    total = 0;
+    for (var i = 0; i < itemsSelected.length; i++) {
+      total += itemsSelected[i].getPrice();
+    }
+  }
 
   @override
   void initState() {
@@ -81,22 +89,39 @@ class _SalesPageState extends State<SalesPage> {
       cat = getCategoryByID(list[i].getItem().getCategory());
       sol.add(itemsShop(list[i].getItem(), cat, list[i].getQuantity()));
     }
-    sol.add(
-      IconButton(
-          icon: SvgPicture.asset(
-            'svg/calc.svg',
-            semanticsLabel: 'Calculator',
-            width: 100,
+    sol.add(Column(
+      children: <Widget>[
+        SizedBox(
+          height: 10,
+        ),
+        IconButton(
+            iconSize: 100,
+            icon: SvgPicture.asset(
+              'svg/calc.svg',
+              semanticsLabel: 'Calculator',
+              width: 100,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CalculatorPage(items: itemsSelected),
+                ),
+              );
+            }),
+        Center(
+          child: Text(
+            total.toString(),
+            style: TextStyle(
+              fontFamily: "Comfortaa",
+              fontSize: 23,
+              fontWeight: FontWeight.w600,
+              color: kBorderGreen,
+            ),
           ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CalculatorPage(items: itemsSelected),
-              ),
-            );
-          }),
-    );
+        )
+      ],
+    ));
     return sol;
   }
 
@@ -122,6 +147,7 @@ class _SalesPageState extends State<SalesPage> {
             } else {
               itemsSelected = List.from(itemsSelected..remove(item));
             }
+            updatePrice();
           });
         },
         child: itemShop(item, cat, price),
